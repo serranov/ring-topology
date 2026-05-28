@@ -1,0 +1,20 @@
+apiVersion: core.eda.nokia.com/v1
+kind: NodeUser
+metadata:
+  name: admin
+  namespace: clab-topology
+spec:
+  groupBindings:
+    - groups:
+        - sudo
+      nodeSelector:
+        - containerlab=managedSrl
+  password: $aes1$eda1$CY1lk2GlyYth4SlznDW2gA97wKKDooMsEK06j2BL3nlMV/3lL6U=
+  sshPublicKeys:
+    - >-
+      ssh-ed25519
+      AAAAC3NzaC1lZDI1NTE5AAAAIL2l88uDW8KkzThY1n4k29OGPXhFSwU0dDsKomxWZVo4
+    - >-
+      ssh-ed25519
+      AAAAC3NzaC1lZDI1NTE5AAAAIDz6bQY2RQKqSgvxtFRYgbOGC0vbY85hRwTr2VQZaTaE
+  username: admin

@@ -1,0 +1,7 @@
+apiVersion: core.eda.nokia.com/v1
+kind: Namespace
+metadata:
+  name: clab-topology
+  namespace: eda-system
+spec:
+  description: 'Containerlab topology: /home/user/containerlab/ring-topology/topology.yml'

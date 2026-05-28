@@ -1,0 +1,8 @@
+apiVersion: routingpolicies.eda.nokia.com/v1
+kind: Policy
+metadata:
+  name: import-all
+  namespace: clab-topology
+spec:
+  defaultAction:
+    policyResult: Accept

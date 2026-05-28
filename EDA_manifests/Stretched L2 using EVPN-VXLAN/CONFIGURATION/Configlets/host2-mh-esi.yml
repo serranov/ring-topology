@@ -1,0 +1,20 @@
+apiVersion: config.eda.nokia.com/v1
+kind: Configlet
+metadata:
+  name: host2-mh-esi
+  namespace: clab-topology
+spec:
+  configs:
+    - config: |-
+        {
+          "use-esi-label": false
+        }
+      operation: Create
+      path: >-
+        .system.network-instance.protocols.evpn.ethernet-segments.bgp-instance{.id==1}.ethernet-segment{.name=="host2-leaf3-leaf4"}
+  endpoints:
+    - leaf3
+    - leaf4
+  operatingSystem: srl
+  priority: 1
+  version: 25.10.3

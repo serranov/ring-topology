@@ -1,0 +1,14 @@
+apiVersion: aaa.eda.nokia.com/v1
+kind: NodeGroup
+metadata:
+  name: sudo
+  namespace: clab-topology
+spec:
+  rules: []
+  services:
+    - GNMI
+    - CLI
+    - NETCONF
+    - GNOI
+    - GNSI
+  superuser: true

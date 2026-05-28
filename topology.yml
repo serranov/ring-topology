@@ -1,0 +1,86 @@
+name: topology
+
+mgmt:
+  network: topology
+  ipv4-subnet: 172.120.120.0/24
+
+topology:
+  kinds:
+    nokia_srlinux:
+      image: ghcr.io/nokia/srlinux:25.10.3
+      type: ixr-x1b
+      license: ./srl_25-10_2026-08-13.txt
+    linux:
+      image: ghcr.io/srl-labs/network-multitool:v0.6.0
+
+  nodes:
+    # ----------------------- DC1 -----------------------
+    leaf1:
+      kind: nokia_srlinux
+      group: dc1
+      mgmt-ipv4: 172.120.120.11
+    leaf2:
+      kind: nokia_srlinux
+      group: dc1
+      mgmt-ipv4: 172.120.120.12
+
+    # ----------------------- DC2 -----------------------
+    leaf3:
+      kind: nokia_srlinux
+      group: dc2
+      mgmt-ipv4: 172.120.120.13
+    leaf4:
+      kind: nokia_srlinux
+      group: dc2
+      mgmt-ipv4: 172.120.120.14
+
+    # --------------------------- HOSTS ----------------------------
+    host1:
+      kind: linux
+      group: dc1
+      mgmt-ipv4: 172.120.120.101
+      exec:
+        - ip link add bond0 type bond mode 802.3ad miimon 100 lacp_rate fast xmit_hash_policy layer3+4
+        - ip link set dev eth1 down
+        - ip link set dev eth2 down
+        - ip link set dev eth1 master bond0
+        - ip link set dev eth2 master bond0
+        - ip link set dev bond0 up
+        - ip link set dev eth1 up
+        - ip link set dev eth2 up
+        - ip addr add 192.168.3.10/24 dev bond0
+
+    host2:
+      kind: linux
+      group: dc2
+      mgmt-ipv4: 172.120.120.102
+      exec:
+        - ip link add bond0 type bond mode 802.3ad miimon 100 lacp_rate fast xmit_hash_policy layer3+4
+        - ip link set dev eth1 down
+        - ip link set dev eth2 down
+        - ip link set dev eth1 master bond0
+        - ip link set dev eth2 master bond0
+        - ip link set dev bond0 up
+        - ip link set dev eth1 up
+        - ip link set dev eth2 up
+        - ip addr add 192.168.3.20/24 dev bond0
+
+  links:
+    # ============= FABRIC =============
+    # Intra-DC1
+    - endpoints: ["leaf1:e1-2", "leaf2:e1-2"]
+    - endpoints: ["leaf1:e1-3", "leaf2:e1-3"]
+    # Intra-DC2
+    - endpoints: ["leaf3:e1-2", "leaf4:e1-2"]
+    - endpoints: ["leaf3:e1-3", "leaf4:e1-3"]
+    # Inter-DC 
+    - endpoints: ["leaf1:e1-1", "leaf3:e1-1"]
+    - endpoints: ["leaf2:e1-1", "leaf4:e1-1"]
+
+    # ============= HOST1 -> DC1 =============
+    - endpoints: ["host1:eth1", "leaf1:e1-4"]
+    - endpoints: ["host1:eth2", "leaf2:e1-4"]
+
+    # ============= HOST2 -> DC2 =============
+    - endpoints: ["host2:eth1", "leaf3:e1-4"]
+    - endpoints: ["host2:eth2", "leaf4:e1-4"]

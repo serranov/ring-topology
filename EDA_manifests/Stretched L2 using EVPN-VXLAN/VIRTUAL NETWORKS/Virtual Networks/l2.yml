@@ -1,0 +1,29 @@
+apiVersion: services.eda.nokia.com/v2
+kind: VirtualNetwork
+metadata:
+  name: l2
+  namespace: clab-topology
+spec:
+  bridgeDomains:
+    - name: l2
+      spec:
+        encapOptions:
+          vxlan:
+            tunnelIndexPool: tunnel-index-pool
+            vni: 1
+            vniPool: vni-pool
+        evi: 1
+        eviPool: evi-pool
+        exportTarget: target:65000:1
+        importTarget: target:65000:1
+        macLearning:
+          agingTimeSeconds: 300
+          enabled: true
+        type: EVPNVXLAN
+  vlans:
+    - name: no-vlan
+      spec:
+        bridgeDomain: l2
+        interfaceSelectors:
+          - eda.nokia.com/role = edge
+        vlanID: 'null'

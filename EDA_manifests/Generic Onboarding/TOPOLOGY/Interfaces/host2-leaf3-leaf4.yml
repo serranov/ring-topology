@@ -1,0 +1,44 @@
+apiVersion: interfaces.eda.nokia.com/v1
+kind: Interface
+metadata:
+  labels:
+    eda.nokia.com/role: edge
+  name: host2-leaf3-leaf4
+  namespace: clab-topology
+spec:
+  description: edge link to host2
+  enabled: true
+  encapType: 'Null'
+  ethernet:
+    speed: 100G
+  lag:
+    lacp:
+      adminKey: 1
+      interval: Fast
+      lacpFallback:
+        mode: Static
+        timeoutSeconds: 60
+      mode: Active
+      systemMAC: FE:2F:AA:00:00:02
+      systemPriority: 32768
+    minLinks: 1
+    multihoming:
+      esi: auto
+      mode: AllActive
+      reloadDelayTimerSeconds: 100
+      revertive: false
+    type: LACP
+  lldp: true
+  members:
+    - aggregateID: '1'
+      enabled: true
+      interface: ethernet-1-4
+      lacpPortPriority: 32768
+      node: leaf3
+    - aggregateID: '1'
+      enabled: true
+      interface: ethernet-1-4
+      lacpPortPriority: 32768
+      node: leaf4
+  type: LAG
+

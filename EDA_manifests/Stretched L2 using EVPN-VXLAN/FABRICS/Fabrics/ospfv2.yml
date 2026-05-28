@@ -1,0 +1,30 @@
+apiVersion: fabrics.eda.nokia.com/v1
+kind: Fabric
+metadata:
+  name: ospfv2
+  namespace: clab-topology
+spec:
+  interSwitchLinks:
+    linkSelectors:
+      - eda.nokia.com/role = interSwitch
+    poolIPv4: ipv4-pool
+  leafs:
+    leafNodeSelectors:
+      - eda.nokia.com/role = leaf
+  overlayProtocol:
+    bgp:
+      autonomousSystem: 65000
+      clusterID: 1.1.1.1
+      exportPolicies:
+        - export-all
+      importPolicies:
+        - import-all
+      rrClientNodeSelectors:
+        - eda.nokia.com/rr = false
+      rrNodeSelectors:
+        - eda.nokia.com/rr = true
+    protocol: IBGP
+  systemPoolIPv4: systemipv4-pool
+  underlayProtocol:
+    protocols:
+      - OSPFv2

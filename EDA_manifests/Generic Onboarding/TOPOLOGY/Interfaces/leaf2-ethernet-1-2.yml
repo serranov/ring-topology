@@ -1,0 +1,21 @@
+apiVersion: interfaces.eda.nokia.com/v1
+kind: Interface
+metadata:
+  labels:
+    eda.nokia.com/role: interSwitch
+  name: leaf2-ethernet-1-2
+  namespace: clab-topology
+spec:
+  description: interSwitch link to leaf1
+  enabled: true
+  encapType: 'Null'
+  ethernet:
+    speed: 100G
+  lldp: true
+  members:
+    - enabled: true
+      interface: ethernet-1-2
+      lacpPortPriority: 32768
+      node: leaf2
+  mtu: 9000
+  type: Interface

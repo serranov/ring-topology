@@ -1,0 +1,88 @@
+apiVersion: services.eda.nokia.com/v2
+kind: VirtualNetwork
+metadata:
+  name: anycast-gw
+  namespace: clab-topology
+spec:
+  bridgeDomains:
+    - name: l2
+      spec:
+        encapOptions:
+          vxlan:
+            tunnelIndexPool: tunnel-index-pool
+            vni: 1
+            vniPool: vni-pool
+        evi: 1
+        eviPool: evi-pool
+        exportTarget: target:65000:1
+        importTarget: target:65000:1
+        macLearning:
+          agingTimeSeconds: 300
+          enabled: true
+        type: EVPNVXLAN
+  irbInterfaces:
+    - name: anycast-gw
+      spec:
+        bridgeDomain: l2
+        evpnRouteAdvertisementType:
+          arpDynamic: true
+          arpStatic: true
+          ndDynamic: false
+          ndStatic: false
+          rfc9135SymmetricMode: true
+        hostRoutePopulate:
+          dynamic:
+            populate: true
+          evpn:
+            populate: true
+          static:
+            populate: true
+        ipAddresses:
+          - ipv4Address:
+              anycast: true
+              ipPrefix: 192.168.3.254/24
+              primary: true
+            node: leaf1
+          - ipv4Address:
+              anycast: true
+              ipPrefix: 192.168.3.254/24
+              primary: true
+            node: leaf2
+          - ipv4Address:
+              anycast: true
+              ipPrefix: 192.168.4.254/24
+              primary: true
+            node: leaf3
+          - ipv4Address:
+              anycast: true
+              ipPrefix: 192.168.4.254/24
+              primary: true
+            node: leaf4
+        ipMTU: 1500
+        ipv4:
+          arpTimeoutSeconds: 14400
+          learnUnsolicitedARP: Enabled
+        router: l3
+  routers:
+    - name: l3
+      spec:
+        ecmp: 2
+        encapOptions:
+          vxlan:
+            tunnelIndexPool: tunnel-index-pool
+            vni: 100
+            vniPool: vni-pool
+        evi: 100
+        eviPool: evi-pool
+        exportTarget: target:65000:100
+        importTarget: target:65000:100
+        nodeSelectors:
+          - eda.nokia.com/role = leaf
+        type: EVPNVXLAN
+  vlans:
+    - name: no-vlan
+      spec:
+        bridgeDomain: l2
+        interfaceSelectors:
+          - eda.nokia.com/role = edge
+        vlanID: 'null'

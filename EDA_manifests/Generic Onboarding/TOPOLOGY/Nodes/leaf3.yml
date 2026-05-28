@@ -1,0 +1,19 @@
+apiVersion: core.eda.nokia.com/v1
+kind: TopoNode
+metadata:
+  labels:
+    containerlab: managedSrl
+    eda-connector.nokia.com/role: topology-leaf
+    eda-connector.nokia.com/topology: topology
+    eda.nokia.com/role: leaf
+    eda.nokia.com/security-profile: managed
+  name: leaf3
+  namespace: clab-topology
+spec:
+  nodeProfile: topology-srlinux-25.10.3
+  operatingSystem: srl
+  platform: 7250 IXR-X1B
+  productionAddress:
+    ipv4: 172.120.120.13/24
+    ipv6: ''
+  version: 25.10.3
